@@ -1,0 +1,26 @@
+{
+  "name": "m3s20-mongoose-api-v1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iGeek0/m3s20-mongoose-api-v1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iGeek0/m3s20-mongoose-api-v1/issues"
+  },
+  "homepage": "https://github.com/iGeek0/m3s20-mongoose-api-v1#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  }
+}
