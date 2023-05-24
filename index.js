@@ -2,6 +2,10 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
+// require de rutas de mi aplicacion
+const rutasProductos = require("./routes/productos.routes");
+const rutasUsuarios = require("./routes/usuarios.routes");
+
 const app = express();
 
 // para poder consumir API de distintos dominios
@@ -15,7 +19,18 @@ app.get("/", (req, res) => {
     // res.json(); Esto sirve para mandar JSON
 });
 
+// app.get("/productos", (req, res) => {
+//     res.send("Entro a productos GET del archivo independiente productos.controller.js");
+// });
 
-app.listen(process.env.PORT, ()=>{
-    console.log(`La aplicacion esta corriendo en el puerto: ${process.env.PORT}`);
-});
+
+( ()=>{
+
+    // Carga de mis rutas
+    app.use(rutasProductos);
+    app.use(rutasUsuarios);
+    app.listen(process.env.PORT, ()=>{
+        console.log(`La aplicacion esta corriendo en el puerto: ${process.env.PORT}`);
+    });
+
+} )();
