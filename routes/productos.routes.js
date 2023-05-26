@@ -5,6 +5,8 @@ const {productosGet, productosPost} = require('../controllers/productos.controll
 
 router.get("/productos", productosGet);
 router.post("/productos", productosPost);
+// Intentar put
+// intentar delete
 
 
 module.exports = router;
