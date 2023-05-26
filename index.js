@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const { dbConnection } = require("./database/config");
 require('dotenv').config();
 
 // require de rutas de mi aplicacion
@@ -24,9 +25,9 @@ app.get("/", (req, res) => {
 // });
 
 
-( ()=>{
-
+( async ()=>{
     // Carga de mis rutas
+    await dbConnection();
     app.use(rutasProductos);
     app.use(rutasUsuarios);
     app.listen(process.env.PORT, ()=>{
