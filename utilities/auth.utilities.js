@@ -16,7 +16,7 @@ const generarToken = (data) => {
         {
             data
         }
-        , process.env.SECRET_JWT, { expiresIn: '8h' });
+        , process.env.SECRET_JWT, { expiresIn: '30s' });
         // { expiresIn: '30s' }
 }
 

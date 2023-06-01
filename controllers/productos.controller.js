@@ -38,10 +38,17 @@ const productosPost = async (req = request, res = response) => {
   }
 }
 
+const procutosSecretos = (req = request, res = response) => {
+    res.status(200).json({
+        msg: "Listado de productos secretos solo para usuarios autenticados"
+    });
+}
+
 
 module.exports = {
     productosGet,
-    productosPost
+    productosPost,
+    procutosSecretos
 }
 
 /*
