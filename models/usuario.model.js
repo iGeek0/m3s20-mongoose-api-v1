@@ -11,7 +11,7 @@ const usuariosSchema = Schema({
         required: [true, 'El email es obligatorio']
     },
     dob: {
-        type:String,
+        type:Date,
         required: [true, 'Fecha de nacimiento es obligatorio']
     },
     password: {

@@ -1,7 +1,6 @@
 const { response, request } = require('express');
 const Usuario = require('../models/usuario.model');
-const bcrypt = require('bcrypt');
-
+const { hashPassword, comparePassword, generarToken } = require('../utilities/auth.utilities');
 const usuariosGet = (req = request, res = response) => {
     res.send("Entro a productos GET del archivo independiente usuarios.controller.js");
 }
@@ -9,10 +8,9 @@ const usuariosGet = (req = request, res = response) => {
 const signUp = async (req = request, res = response) => {
     // Acordarse que este es como si fuera "usuariosPost"
     try {
-        const saltRounds = 10;
         const body = req.body;
         let usuario = new Usuario(body);
-        usuario.password = await bcrypt.hash(usuario.password, saltRounds);
+        usuario.password = await hashPassword(usuario.password);
         await usuario.save();
         res.status(201).json({
             msg: "El usuario se agrego correctamente",
@@ -26,8 +24,43 @@ const signUp = async (req = request, res = response) => {
     }
 }
 
+const  logIn = async (req = request, res = response) => {
+    try {
+        const { email, password } = req.body;
+        const userInformation = await Usuario.findOne({email:email});
+        // if (userInformation === null) {
+        //     res.status(400).json({
+        //         msg: "Email no encontrado.",
+        //         detalle: null
+        //     });
+        // }
+        const isValidPassword = await comparePassword(password, userInformation.password);
+        if (isValidPassword) {
+            res.status(200).json({
+                msg: "Login correcto",
+                detalle: generarToken({
+                    nombre: userInformation.nombre,
+                    email: userInformation.email
+                })
+            });
+        } else {
+            res.status(400).json({
+                msg: "Credencial incorrectas",
+                detalle: null
+            });
+        }
+
+    } catch (error) {
+        res.status(400).json({
+            msg: "Informacion incorrecta",
+            detalle: error.message
+        });
+    }
+}
+
 
 module.exports = {
     usuariosGet,
-    signUp
+    signUp,
+    logIn
 }

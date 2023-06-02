@@ -78,6 +78,14 @@ const productosDelete = async (req = request, res = response) => {
 }
 
 
+const productosPremium = async (req = request, res = response) => {
+  res.status(200).json({
+      msg: "Si ves esto eres un usuario logeado en el sistema.",
+      detalle: null
+  });
+}
+
+
 
 
 
@@ -85,7 +93,8 @@ module.exports = {
   productosGet,
   productosPost,
   productosPut,
-  productosDelete
+  productosDelete,
+  productosPremium
 }
 
 /*
