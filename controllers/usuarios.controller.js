@@ -1,6 +1,6 @@
 const { response, request } = require('express');
 const Usuario = require('../models/usuario.model');
-const { hashPassword, comparePassword, generarToken } = require('../utilities/auth.utilities');
+const { hashPassword, comparePassword, generarToken, validarToken } = require('../utilities/auth.utilities');
 const usuariosGet = (req = request, res = response) => {
     res.send("Entro a productos GET del archivo independiente usuarios.controller.js");
 }
@@ -58,9 +58,35 @@ const  logIn = async (req = request, res = response) => {
     }
 }
 
+const validarTokenPost = async (req = request, res = response) => {
+
+    try {
+        const {token} = req.body;
+        const isValidToken = await validarToken(token);
+        if (isValidToken) {
+            res.status(201).json({
+                msg: "Token valido",
+                detalle: null,
+            });
+        } else {
+            res.status(400).json({
+                msg: "Token invalido",
+                detalle: null
+            });
+        }
+
+    } catch (error) {
+        res.status(400).json({
+            msg: "Error en validacion de token",
+            detalle: error.message
+        });
+    }
+}
+
 
 module.exports = {
     usuariosGet,
     signUp,
-    logIn
+    logIn,
+    validarTokenPost
 }

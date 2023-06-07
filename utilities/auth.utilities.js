@@ -17,7 +17,7 @@ const generarToken = (data) => {
         {
             data
         },
-        "firma-secreta",
+        process.env.JWT_KEY,
         {
             expiresIn: '8h'
         }
@@ -25,7 +25,7 @@ const generarToken = (data) => {
 }
 
 const validarToken = (token) => {
-    return jwt.verify(token, "firma-secreta");
+    return jwt.verify(token, process.env.JWT_KEY);
 }
 
 
