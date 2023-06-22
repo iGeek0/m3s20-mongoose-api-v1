@@ -94,29 +94,21 @@ const perfilInfo = async (req = request, res = response) => {
     });
 }
 
-const changePassword = async (req = request, res = response) => {
+const editUser = async (req = request, res = response) => {
     try {
-        const { old_password, password } = req.body;
+        const body = req.body;
         const tokenDecoded = leerToken(req.headers.authorization.split(" ")[1]);
         const { id } = tokenDecoded.data;
-        let usuario = await Usuario.findById(id);
-        const isValidPassword = await comparePassword(old_password, usuario.password);
-
-        if (!isValidPassword) {
-            res.status(400).json({
-                msg: "Password anterior incorrecto",
-                detalle: null
-            });
+        if (body.password) {
+            body.password = await hashPassword(body.password);
         } else {
-
-            usuario.password = await hashPassword(password);
-            await usuario.save();
-
-            res.status(201).json({
-                msg: "El password se cambio correctamente",
-                detalle: usuario
-            });
+            delete body.password;
         }
+        await Usuario.findByIdAndUpdate(id, body);
+        res.status(200).json({
+            msg: "Usuario actualizado correctamente",
+            detalle: Usuario
+        });
     } catch (error) {
         res.status(400).json({
             msg: "No se pudo cambiar el password",
@@ -132,5 +124,5 @@ module.exports = {
     logIn,
     validarTokenPost,
     perfilInfo,
-    changePassword
+    editUser
 }
