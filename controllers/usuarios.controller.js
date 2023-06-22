@@ -84,45 +84,11 @@ const validarTokenPost = async (req = request, res = response) => {
     }
 }
 
-const perfilInfo = async (req = request, res = response) => {
-    const { id } = req.query;
-    let usuario = await Usuario.findById(id);
-    usuario.password = undefined;
-    res.status(200).json({
-        msg: "Perfil de usuario",
-        detalle: usuario
-    });
-}
-
-const editUser = async (req = request, res = response) => {
-    try {
-        const body = req.body;
-        const tokenDecoded = leerToken(req.headers.authorization.split(" ")[1]);
-        const { id } = tokenDecoded.data;
-        if (body.password) {
-            body.password = await hashPassword(body.password);
-        } else {
-            delete body.password;
-        }
-        await Usuario.findByIdAndUpdate(id, body);
-        res.status(200).json({
-            msg: "Usuario actualizado correctamente",
-            detalle: Usuario
-        });
-    } catch (error) {
-        res.status(400).json({
-            msg: "No se pudo cambiar el password",
-            detalle: error.message
-        });
-    }
-}
 
 
 module.exports = {
     usuariosGet,
     signUp,
     logIn,
-    validarTokenPost,
-    perfilInfo,
-    editUser
+    validarTokenPost
 }

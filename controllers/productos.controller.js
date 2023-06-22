@@ -2,16 +2,11 @@ const { response, request } = require('express');
 const Producto = require('../models/producto.model');
 
 const productosGet = async (req = request, res = response) => {
-  const { id } = req.query;
   let productosLista = [];
 
   try {
 
-    if (id) {
-      productosLista = await Producto.findById(id);
-    } else {
-      productosLista = await Producto.find();
-    }
+    productosLista = await Producto.find();
 
     res.status(200).json({
       msg: "Listado de productos",
@@ -88,8 +83,8 @@ const productosDelete = async (req = request, res = response) => {
 
 const productosPremium = async (req = request, res = response) => {
   res.status(200).json({
-      msg: "Si ves esto eres un usuario logeado en el sistema.",
-      detalle: null
+    msg: "Si ves esto eres un usuario logeado en el sistema.",
+    detalle: null
   });
 }
 
