@@ -39,7 +39,6 @@ const  logIn = async (req = request, res = response) => {
             res.status(200).json({
                 msg: "Login correcto",
                 detalle: generarToken({
-                    id: userInformation._id,
                     nombre: userInformation.nombre,
                     email: userInformation.email
                 })
