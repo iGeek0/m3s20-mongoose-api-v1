@@ -2,8 +2,16 @@ const { response, request } = require('express');
 const Producto = require('../models/producto.model');
 
 const productosGet = async (req = request, res = response) => {
+  const { id } = req.query;
+  let productosLista = [];
+
   try {
-    const productosLista = await Producto.find();
+
+    if (id) {
+      productosLista = await Producto.findById(id);
+    } else {
+      productosLista = await Producto.find();
+    }
 
     res.status(200).json({
       msg: "Listado de productos",
