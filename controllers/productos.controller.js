@@ -3,10 +3,15 @@ const Producto = require('../models/producto.model');
 
 const productosGet = async (req = request, res = response) => {
   let productosLista = [];
+  const { id } = req.query;
 
   try {
 
-    productosLista = await Producto.find();
+    if (id) {
+      productosLista = await Producto.findById(id);
+    } else {
+      productosLista = await Producto.find();
+    }
 
     res.status(200).json({
       msg: "Listado de productos",
