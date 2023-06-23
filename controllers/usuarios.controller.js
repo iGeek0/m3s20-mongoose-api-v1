@@ -1,6 +1,8 @@
 const { response, request } = require('express');
 const Usuario = require('../models/usuario.model');
 const { hashPassword, comparePassword, generarToken, validarToken, leerToken } = require('../utilities/auth.utilities');
+
+
 const usuariosGet = (req = request, res = response) => {
     res.send("Entro a productos GET del archivo independiente usuarios.controller.js");
 }
@@ -24,10 +26,10 @@ const signUp = async (req = request, res = response) => {
     }
 }
 
-const  logIn = async (req = request, res = response) => {
+const logIn = async (req = request, res = response) => {
     try {
         const { email, password } = req.body;
-        const userInformation = await Usuario.findOne({email:email});
+        const userInformation = await Usuario.findOne({ email: email });
         // if (userInformation === null) {
         //     res.status(400).json({
         //         msg: "Email no encontrado.",
@@ -39,6 +41,7 @@ const  logIn = async (req = request, res = response) => {
             res.status(200).json({
                 msg: "Login correcto",
                 detalle: generarToken({
+                    id: userInformation._id,
                     nombre: userInformation.nombre,
                     email: userInformation.email
                 })
@@ -61,7 +64,7 @@ const  logIn = async (req = request, res = response) => {
 const validarTokenPost = async (req = request, res = response) => {
 
     try {
-        const {token} = req.body;
+        const { token } = req.body;
         const isValidToken = await validarToken(token);
         if (isValidToken) {
             res.status(201).json({
@@ -83,11 +86,54 @@ const validarTokenPost = async (req = request, res = response) => {
     }
 }
 
+const getPerfil = async (req = request, res = response) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const tokenDecoded = leerToken(token);
+    const user_id = tokenDecoded.data.id;
+    let usuario = await Usuario.findById(user_id);
+    usuario.password = undefined;
+    res.json({
+        msg: "Perfil de usuario",
+        detalle: usuario
+    });
+}
+
+const editUser = async (req = request, res = response) => {
+    try {
+
+        const body = req.body;
+        const tokenDecoded = leerToken(req.headers.authorization.split(" ")[1]);
+        const user_id = tokenDecoded.data.id;
+
+        if (body.password) {
+            body.password = await hashPassword(body.password);
+        } else {
+            delete body.password;
+        }
+
+        await Usuario.findByIdAndUpdate(user_id, body);
+
+        res.status(200).json({
+            msg: "Usuario actualizado correctamente",
+            detalle: Usuario
+        });
+
+    } catch (error) {
+        res.status(400).json({
+            msg: "No se pudo actualizar el usuario",
+            detalle: error.message
+        });
+    }
+}
+
+
 
 
 module.exports = {
     usuariosGet,
     signUp,
     logIn,
-    validarTokenPost
+    validarTokenPost,
+    getPerfil,
+    editUser
 }

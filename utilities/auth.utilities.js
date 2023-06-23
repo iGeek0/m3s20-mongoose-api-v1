@@ -27,6 +27,10 @@ const validarToken = (token) => {
     return jwt.verify(token, process.env.JWT_KEY);
 }
 
+const leerToken = (token) => {
+    return jwt.decode(token, process.env.JWT_KEY);
+}
+
 
 
 
@@ -36,5 +40,6 @@ module.exports = {
     hashPassword,
     comparePassword,
     generarToken,
-    validarToken
+    validarToken,
+    leerToken
 }
